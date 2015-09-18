@@ -1,2 +1,2 @@
 # SuperDuo
-For Football Scores App in res/values/strings.xml add  <string name="api_key"></string>
+For Football Scores App in res/values/strings.xml add another entry with name=api_key
