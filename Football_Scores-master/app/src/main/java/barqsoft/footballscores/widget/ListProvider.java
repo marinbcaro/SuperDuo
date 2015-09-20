@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Binder;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService.RemoteViewsFactory;
 
@@ -97,10 +96,19 @@ public class ListProvider implements RemoteViewsFactory {
         final RemoteViews remoteView = new RemoteViews(
                 context.getPackageName(), R.layout.list_row);
         ListItem listItem = listItemList.get(position);
+        String home_score="0";
+        String away_score="0";
+        if(!listItem.home_score.equals("-1")){
+            home_score=listItem.home_score;
+        }
+        if(!listItem.away_score.equals("-1")){
+            away_score=listItem.away_score;
+        }
+
         remoteView.setTextViewText(R.id.home_name, listItem.home_name);
         remoteView.setTextViewText(R.id.away_name, listItem.away_name);
-        remoteView.setTextViewText(R.id.home_score, listItem.home_score);
-        remoteView.setTextViewText(R.id.away_score, listItem.away_score);
+        remoteView.setTextViewText(R.id.home_score,home_score);
+        remoteView.setTextViewText(R.id.away_score, away_score);
         remoteView.setTextViewText(R.id.time_game, listItem.time_game);
 
         Intent fillInIntent = new Intent();
