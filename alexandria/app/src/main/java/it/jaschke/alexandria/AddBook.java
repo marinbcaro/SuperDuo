@@ -86,7 +86,10 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                     bookIntent.putExtra(BookService.EAN, ean);
                     bookIntent.setAction(BookService.FETCH_BOOK);
                     getActivity().startService(bookIntent);
-                    AddBook.this.restartLoader();
+                    if (getLoaderManager().getLoader(LOADER_ID) != null) {
+                        AddBook.this.restartLoader();
+                    }
+
                 }else{
 
                     CharSequence text = "No Internet Connection";
@@ -234,15 +237,29 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
 
 
         if (resultCode == Activity.RESULT_OK) {
-            String result = data.getStringExtra("result");
-            Intent bookIntent = new Intent(getActivity(), BookService.class);
-            bookIntent.putExtra(BookService.EAN, result);
-            bookIntent.setAction(BookService.FETCH_BOOK);
-            getActivity().startService(bookIntent);
-            AddBook.this.restartLoader();
-            Toast toast = Toast.makeText(getActivity(), "Book Added", Toast.LENGTH_SHORT);
-            toast.show();
+
+            if(isNetworkAvailable(getActivity().getApplicationContext())) {
+                String result = data.getStringExtra("result");
+                Intent bookIntent = new Intent(getActivity(), BookService.class);
+                bookIntent.putExtra(BookService.EAN, result);
+                bookIntent.setAction(BookService.FETCH_BOOK);
+                getActivity().startService(bookIntent);
+                //ean.setText(result);
+                //Once we have an ISBN, start a book intent
+                AddBook.this.restartLoader();
+                Toast toast = Toast.makeText(getActivity(), "Book Added", Toast.LENGTH_SHORT);
+                toast.show();
+
+            }else{
+                CharSequence text = "No Internet Connection";
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(), text, duration);
+                toast.show();
+            }
+
+
         }
+
     }
 
     @Override
