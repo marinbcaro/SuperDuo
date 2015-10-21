@@ -85,10 +85,11 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                     Intent bookIntent = new Intent(getActivity(), BookService.class);
                     bookIntent.putExtra(BookService.EAN, ean);
                     bookIntent.setAction(BookService.FETCH_BOOK);
-                    getActivity().startService(bookIntent);
-                    if (getLoaderManager().getLoader(LOADER_ID) != null) {
-                        AddBook.this.restartLoader();
+                    AddBook.this.restartLoader();
+                  if(ean.length()>0) {
+                        getActivity().startService(bookIntent);
                     }
+                  clearFields();
 
                 }else{
 
@@ -115,6 +116,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
 
                 Intent intent = new Intent(getActivity(), ScannerActivity.class);
                 startActivityForResult(intent, 1);
+             //   clearFields();
 
 //                Toast toast = Toast.makeText(context, text, duration);
 //                toast.show();
@@ -136,8 +138,11 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                 Intent bookIntent = new Intent(getActivity(), BookService.class);
                 bookIntent.putExtra(BookService.EAN, ean.getText().toString());
                 bookIntent.setAction(BookService.DELETE_BOOK);
-                getActivity().startService(bookIntent);
+                if(ean.length()>0) {
+                    getActivity().startService(bookIntent);
+                }
                 ean.setText("");
+               clearFields();
             }
         });
 
@@ -213,6 +218,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         rootView.findViewById(R.id.delete_button).setVisibility(View.VISIBLE);
         Toast toast = Toast.makeText(getActivity(), "Book added", Toast.LENGTH_SHORT);
         toast.show();
+        //clearFields();
     }
 
     @Override
@@ -243,12 +249,16 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                 Intent bookIntent = new Intent(getActivity(), BookService.class);
                 bookIntent.putExtra(BookService.EAN, result);
                 bookIntent.setAction(BookService.FETCH_BOOK);
-                getActivity().startService(bookIntent);
+                AddBook.this.restartLoader();
+             //   if(ean.length()>0) {
+                    getActivity().startService(bookIntent);
+               // }
                 //ean.setText(result);
                 //Once we have an ISBN, start a book intent
-                AddBook.this.restartLoader();
+
                 Toast toast = Toast.makeText(getActivity(), "Book Added", Toast.LENGTH_SHORT);
                 toast.show();
+                clearFields();
 
             }else{
                 CharSequence text = "No Internet Connection";
